@@ -1,14 +1,15 @@
 // FROM PROCESS COMPENDIUM
 
-// Process 7
+// Process 8
 
-// A rectangular surface filled with varying sizes of Element 1.
-// Draw a line from the centers of Elements that are touching.
-// Set the value of the shortest possible line to white and the
-// longest to black, with varying grays representing values in between.
-// Draw the perimeter of each Element as a black line and the center as a white dot.
+// A rectangular surface densely filled with instances of Element 2,
+// each with a different size, speed, and direction. Display the intersections
+// by drawing a circle at each point of contact. Set the size of each circle
+// relative to the distance between the centers of the overlapping Elements.
+// Draw the smallest possible circle as black and largest as white, with varying
+// grays representing sizes in between.
 
-let circleNum = 50;
+let circleNum = 100;
 let radiusMin = 20;
 let radiusMax = 50;
 
@@ -17,7 +18,7 @@ let currentAngle;
 
 let circles = [];
 
-let DEBUG = true;
+let DEBUG = false;
 
 let capturer = new CCapture({
 	format: 'png',
@@ -118,8 +119,8 @@ class Elements {
 		// this.behaviour7();
 
 		this.debug();
-		this.form1();
-		// this.form2();
+		// this.form1();
+		this.form2();
 	}
 
 	debug() {
@@ -172,7 +173,6 @@ class Elements {
 				((localLine.y1 - localLine.y2) * (otherLine.x2 - localLine.x1) +
 					(localLine.x2 - localLine.x1) * (otherLine.y2 - localLine.y1)) /
 				det;
-			// console.log('working');
 			return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
 		}
 	}
@@ -299,8 +299,9 @@ class Elements {
 	form2() {
 		main.noFill();
 		for (let i = 0; i < circles.length; i++) {
-			if (this.touching(circles[i])) {
-				if (this.distance(circles[i]) > 0) {
+			if (this.intersects(circles[i])) {
+				// this fixes the random cross canvas intersections
+				if (this.distance(circles[i]) < 200) {
 					// Calculate the grey value using the map function based on the distance between the circles
 					main.stroke(
 						map(
@@ -317,24 +318,17 @@ class Elements {
 					let x = lerp(this.x, circles[i].x, 0.5);
 					let y = lerp(this.y, circles[i].y, 0.5);
 
-					main.fill(
-						255,
-						map(
-							this.distance(circles[i]),
-							0,
-							this.radius + circles[i].radius,
-							0,
-							255
-						),
-						map(
-							this.distance(circles[i]),
-							0,
-							this.radius + circles[i].radius,
-							0,
-							255
-						),
-						50
-					);
+					// main.fill(
+					// 	map(
+					// 		this.distance(circles[i]),
+					// 		0,
+					// 		this.radius + circles[i].radius,
+					// 		0,
+					// 		255
+					// 	),
+
+					// 	50
+					// );
 					// Draw an ellipse with the radius of the distance between circles
 					main.ellipse(
 						x,
