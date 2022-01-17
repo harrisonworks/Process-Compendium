@@ -13,38 +13,71 @@
 let circleNum = 20;
 let radiusMin = 20;
 let radiusMax = 50;
+let originNumber = 3;
+
+let bug, main;
 let currentAngle;
 
 let circles = [];
 
-let originNumber = 3;
-
 let DEBUG = true;
+
+let capturer = new CCapture({
+	format: 'png',
+});
 
 function setup() {
 	createCanvas(1000, 1000);
+
 	background(250);
 
 	currentAngle = (PI * 2) / 36;
 	strokeWeight(0.5);
 
-	CircleInit();
-}
+	// debug canvas
+	bug = createGraphics(1000, 1000);
+	// main canvas
+	main = createGraphics(1000, 1000);
 
-function windowResized() {
-	resizeCanvas(windowWidth, windowHeight);
 	CircleInit();
 }
 
 function draw() {
-	if (DEBUG) {
-		background(250);
-	}
+	background(250);
+	bug.background(250);
 
 	for (let i = 0; i < circles.length; i++) {
 		circles[i].update();
 	}
+
+	// click to see the debug mode
+	if (mouseIsPressed) {
+		image(bug, 0, 0, 1000, 1000);
+	}
+	image(main, 0, 0, 1000, 1000);
+
+	capturer.capture(document.getElementById('defaultCanvas0'));
 }
+
+function keyPressed() {
+	// r key
+	// start recording
+	if (keyCode === 82) {
+		capturer.start();
+	}
+
+	// s key
+	if (keyCode === 83) {
+		capturer.save();
+	}
+
+	// e key
+	// EXPORT
+	if (keyCode === 69) {
+		capturer.stop();
+	}
+}
+
 function CircleInit() {
 	// clear array
 	circles = [];
@@ -124,41 +157,38 @@ class Circle {
 
 		this.originDetect();
 
-		if (DEBUG) this.debug();
-		else {
-			this.form1();
-			// this.form2();
-		}
+		this.debug();
+		this.form1();
+		// this.form2();
 	}
 
 	debug() {
-		stroke(0);
-		ellipseMode(RADIUS);
+		// all renderable functions are on the bug canvas
+		bug.stroke(0);
+		bug.ellipseMode(RADIUS);
 
-		push();
+		bug.push();
 
-		translate(this.x, this.y);
-		rotate(this.heading);
-		noFill();
+		bug.translate(this.x, this.y);
+		bug.rotate(this.heading);
+		bug.noFill();
 
-		ellipse(0, 0, this.radius, this.radius);
+		bug.ellipse(0, 0, this.radius, this.radius);
 
-		text(this.emoji, 0, 0);
+		bug.line(0, 0, this.radius, 0);
+		bug.pop();
 
-		line(0, 0, this.radius, 0);
-		pop();
-
-		stroke(192, 0, 0, 255);
+		bug.stroke(192, 0, 0, 255);
 
 		for (let i = 0; i < circles.length; i++) {
 			if (this.touching(circles[i])) {
-				line(this.x, this.y, circles[i].x, circles[i].y);
+				bug.line(this.x, this.y, circles[i].x, circles[i].y);
 			}
 		}
 
 		// origin circle
-		noFill();
-		ellipse(this.origin.x, this.origin.y, this.origin.radius);
+		bug.noFill();
+		bug.ellipse(this.origin.x, this.origin.y, this.origin.radius);
 	}
 
 	behaviour1() {
@@ -203,9 +233,9 @@ class Circle {
 		}
 	}
 
+	// check if object has left origin
 	originDetect() {
 		if (!this.touching(this.origin)) {
-			// console.log(true);
 			this.x = this.origin.x;
 			this.y = this.origin.y;
 		}
@@ -248,13 +278,14 @@ class Circle {
 		}
 	}
 
+	// both froms will render on the main canvas
 	form1() {
 		for (let i = 0; i < circles.length; i++) {
 			if (this.touching(circles[i])) {
 				// Make sure that cirlces are not being draw on top of eachother
 				if (this.distance(circles[i]) > 0) {
 					// Calculate the grey value using the map function based on the distance between the circles
-					stroke(
+					main.stroke(
 						map(
 							this.distance(circles[i]),
 							0,
@@ -265,7 +296,7 @@ class Circle {
 						50
 					);
 					// Draw a line between the centres of the circles
-					line(this.x, this.y, circles[i].x, circles[i].y);
+					main.line(this.x, this.y, circles[i].x, circles[i].y);
 				}
 			}
 		}
@@ -277,7 +308,7 @@ class Circle {
 			if (this.touching(circles[i])) {
 				if (this.distance(circles[i]) > 0) {
 					// Calculate the grey value using the map function based on the distance between the circles
-					stroke(
+					main.stroke(
 						map(
 							this.distance(circles[i]),
 							0,
@@ -292,7 +323,7 @@ class Circle {
 					let x = lerp(this.x, circles[i].x, 0.5);
 					let y = lerp(this.y, circles[i].y, 0.5);
 
-					fill(
+					main.fill(
 						255,
 						map(
 							this.distance(circles[i]),
@@ -311,7 +342,12 @@ class Circle {
 						50
 					);
 					// Draw an ellipse with the radius of the distance between circles
-					ellipse(x, y, this.distance(circles[i]), this.distance(circles[i]));
+					main.ellipse(
+						x,
+						y,
+						this.distance(circles[i]),
+						this.distance(circles[i])
+					);
 				}
 			}
 		}
