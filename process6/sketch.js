@@ -19,7 +19,7 @@ let circles = [];
 
 let originNumber = 3;
 
-let DEBUG = false;
+let DEBUG = true;
 
 function setup() {
 	createCanvas(1000, 1000);
@@ -55,10 +55,13 @@ function CircleInit() {
 	let protection = 0;
 	while (originList.length < originNumber) {
 		// Pick a random circle
+
+		// use the proposed raduis to create boundaries for the origin
+		let randRaduis = random(radiusTarget / 2, radiusTarget);
 		let circle = {
-			x: random(width),
-			y: random(height),
-			radius: random(radiusTarget / 2, radiusTarget),
+			x: random(randRaduis, width - randRaduis),
+			y: random(randRaduis, height - randRaduis),
+			radius: randRaduis,
 		};
 
 		// Does it overlap any previous circles?
