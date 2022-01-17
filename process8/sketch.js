@@ -83,7 +83,7 @@ function CircleInit() {
 	// fill array with new circle instances
 	// spawn circles in the center of the origins
 	for (let i = 0; i < circleNum; i++) {
-		circles[i] = new Circle(
+		circles[i] = new Elements(
 			random(0, width),
 			random(0, height),
 			random(radiusMin, radiusMax)
@@ -91,7 +91,7 @@ function CircleInit() {
 	}
 }
 
-class Circle {
+class Elements {
 	constructor(x, y, radius) {
 		this.x = x;
 		this.y = y;
@@ -99,15 +99,21 @@ class Circle {
 
 		this.heading = random(PI * 2);
 		this.speed = 1;
+
+		this.linePoints = {
+			x1: -this.radius + this.x,
+			y1: 0 + this.y,
+			x2: this.radius + this.x,
+			y2: 0 + this.y,
+		};
 	}
 
 	update() {
 		this.behaviour1();
-		this.behaviour2();
-		this.behaviour3();
-		this.behaviour4();
-
-		// this.behaviour5();
+		// this.behaviour2();
+		// this.behaviour3();
+		// this.behaviour4();
+		this.behaviour5();
 		// this.behaviour6();
 		// this.behaviour7();
 
@@ -127,17 +133,47 @@ class Circle {
 		bug.rotate(this.heading);
 		bug.noFill();
 
+		// represents draw line radius
 		bug.ellipse(0, 0, this.radius, this.radius);
 
-		bug.line(0, 0, this.radius, 0);
+		// arrow representation
+		bug.line(-this.radius, 0, this.radius, 0);
+		bug.ellipse(this.radius, 0, 6);
 		bug.pop();
 
 		bug.stroke(192, 0, 0, 255);
 
 		for (let i = 0; i < circles.length; i++) {
-			if (this.touching(circles[i])) {
+			// console.log(localLine, otherLine);
+			if (this.intersects(circles[i])) {
 				bug.line(this.x, this.y, circles[i].x, circles[i].y);
 			}
+		}
+		// noLoop();
+	}
+
+	// this is detects the intersection of lines
+	intersects(other) {
+		let localLine = this.linePoints;
+		let otherLine = other.linePoints;
+
+		let det, gamma, lambda;
+		det =
+			(localLine.x2 - localLine.x1) * (otherLine.y2 - otherLine.y1) -
+			(otherLine.x2 - otherLine.x1) * (localLine.y2 - localLine.y1);
+		if (det === 0) {
+			return false;
+		} else {
+			lambda =
+				((otherLine.y2 - otherLine.y1) * (otherLine.x2 - localLine.x1) +
+					(otherLine.x1 - otherLine.x2) * (otherLine.y2 - localLine.y1)) /
+				det;
+			gamma =
+				((localLine.y1 - localLine.y2) * (otherLine.x2 - localLine.x1) +
+					(localLine.x2 - localLine.x1) * (otherLine.y2 - localLine.y1)) /
+				det;
+			// console.log('working');
+			return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
 		}
 	}
 
@@ -147,6 +183,13 @@ class Circle {
 		let dy = this.speed * sin(this.heading);
 		this.x += dx;
 		this.y += dy;
+
+		this.linePoints = {
+			x1: this.radius * cos(this.heading) + this.x,
+			y1: this.radius * sin(this.heading) + this.y,
+			x2: -this.radius * cos(this.heading) + this.x,
+			y2: -this.radius * sin(this.heading) + this.y,
+		};
 	}
 
 	behaviour2() {
@@ -161,7 +204,7 @@ class Circle {
 		// While touching another, change direction
 		for (let i = 0; i < circles.length; i++) {
 			if (circles[i] != this) {
-				if (this.touching(circles[i])) {
+				if (this.intersects(circles[i])) {
 					this.heading += random(-currentAngle, currentAngle);
 				}
 			}
