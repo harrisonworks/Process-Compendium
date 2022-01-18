@@ -309,26 +309,26 @@ class Elements {
 
 		for (let i = 0; i < circles.length; i++) {
 			if (this.formTest(circles[i])) {
-				if (this.distance(circles[i]) < width / 3) {
+				if (this.distance(circles[i]) < width / 4) {
 					// Calculate the grey value using the map function based on the distance between the circles
-					this.alpha += 3;
+					this.alpha += 4;
+
+					main.stroke(this.grey, this.alpha);
+
+					main.quad(
+						this.linePoints.x1,
+						this.linePoints.y1,
+						circles[i].linePoints.x1,
+						circles[i].linePoints.y1,
+						this.linePoints.x2,
+						this.linePoints.y2,
+						circles[i].linePoints.x2,
+						circles[i].linePoints.y2
+					);
 				}
 			}
 
 			if (this.alpha >= 0) this.alpha -= 1;
-
-			main.stroke(this.grey, this.alpha);
-
-			main.quad(
-				this.linePoints.x1,
-				this.linePoints.y1,
-				circles[i].linePoints.x1,
-				circles[i].linePoints.y1,
-				this.linePoints.x2,
-				this.linePoints.y2,
-				circles[i].linePoints.x2,
-				circles[i].linePoints.y2
-			);
 		}
 	}
 
