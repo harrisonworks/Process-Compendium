@@ -1,12 +1,12 @@
 // FROM PROCESS COMPENDIUM
 
-// Process 16
+// Process 17
 
-// A rectangular surface filled with instances of Element 3,
-// each with a different size and gray value. Draw a tiny,
-// transparent circle at the midpoint of each Element.
-// Increase a circles size and opacity while its Element is
-// touching another Element and decrease while it is not.
+// A rectangular surface filled with instances of Element 5,
+// each with a different size and gray value. Draw a transparent
+// circle at the midpoint of each Element. Increase a circle?s size
+// and opacity while its Element is touching another Element and
+// decrease while it is not.
 
 let circleNum = 50;
 let radiusMin = 50;
@@ -103,11 +103,11 @@ class Elements {
 	update() {
 		this.behaviour1();
 		// this.behaviour2();
-		this.behaviour3();
+		// this.behaviour3();
 		// this.behaviour4();
 		this.behaviour5();
-		// this.behaviour6();
-		// this.behaviour7();
+		this.behaviour6();
+		this.behaviour7();
 
 		// this.originDetect();
 		this.debug();
@@ -206,7 +206,7 @@ class Elements {
 		// While touching another, move away from its centre
 		for (let i = 0; i < circles; i++) {
 			if (circles[i] != this) {
-				if (touching(circles[i])) {
+				if (this.formTest(circles[i])) {
 					let d = distance(circles[i]);
 					let dx = (circles[i].x - this.x) / d;
 					let dy = (circles[i].y - this.y) / d;
@@ -234,7 +234,7 @@ class Elements {
 				if (this.formTest(circles[i])) {
 					let other = circles[i];
 					// Calculate the direction towards the other circle using the `atan2()` function
-					let direction = atan2(other.y - y, other.x - x);
+					let direction = atan2(other.y - this.y, other.x - this.x);
 					// Calculate the difference between the current heading and the direction towards the other element
 					let delta = direction - this.heading;
 					// Check to see which way would be shorter to turn
@@ -250,7 +250,7 @@ class Elements {
 	behaviour7() {
 		// Deviate from the current direction
 		if (random(1) < 0.5) {
-			this.heading += random(-currentAngle, currentAngle);
+			this.heading += random(-currentAngle / 5, currentAngle / 5);
 		}
 	}
 
@@ -284,29 +284,20 @@ class Elements {
 			if (this.formTest(circles[i])) {
 				// this fixes the random cross canvas intersections
 				let circleDistance = this.distance(circles[i]);
-				if (circleDistance < width / 2) {
-					// Calculate the grey value using the map function based on the distance between the circles
 
-					// find the midpoint between the circle objects that interect
-					let x = lerp(this.x, circles[i].x, 0.5);
-					let y = lerp(this.y, circles[i].y, 0.5);
+				// find the midpoint between the circle objects that interect
+				let x = lerp(this.x, circles[i].x, 0.5);
+				let y = lerp(this.y, circles[i].y, 0.5);
 
-					main.stroke(this.grey, this.alpha);
+				main.stroke(this.grey, this.alpha);
 
-					main.ellipse(
-						this.x,
-						this.y,
-						map(
-							circleDistance,
-							0,
-							this.radius + circles[i].radius,
-							radiusMax,
-							0
-						)
-					);
-					// increase alpha when points are intersecting
-					this.alpha += 8;
-				}
+				main.ellipse(
+					this.x,
+					this.y,
+					map(circleDistance, 0, this.radius + circles[i].radius, radiusMax, 0)
+				);
+				// increase alpha when points are intersecting
+				this.alpha += 8;
 			}
 			// slowly reduce if not
 			if (this.alpha >= 0) this.alpha -= 1;
