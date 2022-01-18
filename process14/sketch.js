@@ -1,22 +1,24 @@
 // FROM PROCESS COMPENDIUM
 
-// Process 7
+// Process 14
 
-// A rectangular surface filled with varying sizes of Element 1.
-// Draw a line from the centers of Elements that are touching.
-// Set the value of the shortest possible line to white and the
-// longest to black, with varying grays representing values in between.
-// Draw the perimeter of each Element as a black line and the center as a white dot.
+// A rectangular surface filled with instances of Element 4,
+// each with a different size and direction. Display the intersections
+// by drawing a circle at each point of contact. Set the size of each
+// circle relative to the distance between the centers of the overlapping
+// Elements. Draw the smallest possible circle as white and the largest
+// as black, with varying grays representing sizes in between.
 
-let circleNum = 50;
-let radiusMin = 20;
+let circleNum = 20;
+let radiusMin = 30;
 let radiusMax = 50;
+
+let globalAlpha = 50;
 
 let bug, main;
 let currentAngle;
 
 let circles = [];
-
 let DEBUG = false;
 
 let capturer = new CCapture({
@@ -50,29 +52,11 @@ function draw() {
 	// click to see the debug mode
 	if (mouseIsPressed || DEBUG) {
 		image(bug, 0, 0, 1000, 1000);
+	} else {
+		image(main, 0, 0, 1000, 1000);
 	}
-	image(main, 0, 0, 1000, 1000);
 
 	capturer.capture(document.getElementById('defaultCanvas0'));
-}
-
-function keyPressed() {
-	// r key
-	// start recording
-	if (keyCode === 82) {
-		capturer.start();
-	}
-
-	// s key
-	if (keyCode === 83) {
-		capturer.save();
-	}
-
-	// e key
-	// EXPORT
-	if (keyCode === 69) {
-		capturer.stop();
-	}
 }
 
 function CircleInit() {
@@ -82,43 +66,53 @@ function CircleInit() {
 	// fill array with new circle instances
 	// spawn circles in the center of the origins
 	for (let i = 0; i < circleNum; i++) {
-		circles[i] = new Circle(
-			random(0, width),
-			random(0, height),
+		circles[i] = new Elements(
+			random(radiusMax, width - radiusMax),
+			random(radiusMax, height - radiusMax),
+			random(1, 3),
 			random(radiusMin, radiusMax)
 		);
 	}
 }
 
-class Circle {
-	constructor(x, y, radius) {
+class Elements {
+	constructor(x, y, speed, radius) {
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
 
 		this.heading = random(PI * 2);
-		this.speed = 1;
+		this.speed = speed;
+
+		this.grey = random(20, 200);
+
+		this.linePoints = {
+			x1: -this.radius + this.x,
+			y1: 0 + this.y,
+			x2: this.radius + this.x,
+			y2: 0 + this.y,
+		};
 	}
 
 	update() {
 		this.behaviour1();
 		this.behaviour2();
 		this.behaviour3();
-		this.behaviour4();
-
+		// this.behaviour4();
 		// this.behaviour5();
 		// this.behaviour6();
 		// this.behaviour7();
 
+		// this.originDetect();
 		this.debug();
-		this.form1();
-		// this.form2();
+		// this.renderLines();
+		this.renderCircles();
+		// this.renderQuads();
 	}
 
 	debug() {
 		// all renderable functions are on the bug canvas
-		bug.stroke(192, 0, 0);
-		bug.strokeWeight(2);
+		bug.stroke(0);
 		bug.ellipseMode(RADIUS);
 
 		bug.push();
@@ -127,17 +121,68 @@ class Circle {
 		bug.rotate(this.heading);
 		bug.noFill();
 
+		// represents draw line radius
 		bug.ellipse(0, 0, this.radius, this.radius);
 
-		bug.line(0, 0, this.radius, 0);
+		// arrow representation
+		bug.line(-this.radius, 0, this.radius, 0);
+		bug.ellipse(this.radius, 0, 6);
 		bug.pop();
 
-		bug.stroke(192, 192, 0, 255);
-
+		bug.stroke(192, 0, 0, 255);
+		bug.noFill();
 		for (let i = 0; i < circles.length; i++) {
+			// console.log(localLine, otherLine);
 			if (this.touching(circles[i])) {
+				// bug.quad(
+				// 	this.linePoints.x1,
+				// 	this.linePoints.y1,
+				// 	circles[i].linePoints.x1,
+				// 	circles[i].linePoints.y1,
+				// 	this.linePoints.x2,
+				// 	this.linePoints.y2,
+				// 	circles[i].linePoints.x2,
+				// 	circles[i].linePoints.y2
+				// );
 				bug.line(this.x, this.y, circles[i].x, circles[i].y);
 			}
+		}
+	}
+
+	// this is detects the intersection of lines
+	intersects(other) {
+		let localLine = this.linePoints;
+		let otherLine = other.linePoints;
+
+		let det, gamma, lambda;
+		det =
+			(localLine.x2 - localLine.x1) * (otherLine.y2 - otherLine.y1) -
+			(otherLine.x2 - otherLine.x1) * (localLine.y2 - localLine.y1);
+		if (det === 0) {
+			return false;
+		} else {
+			lambda =
+				((otherLine.y2 - otherLine.y1) * (otherLine.x2 - localLine.x1) +
+					(otherLine.x1 - otherLine.x2) * (otherLine.y2 - localLine.y1)) /
+				det;
+			gamma =
+				((localLine.y1 - localLine.y2) * (otherLine.x2 - localLine.x1) +
+					(localLine.x2 - localLine.x1) * (otherLine.y2 - localLine.y1)) /
+				det;
+			return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
+		}
+	}
+
+	// check if object has left origin
+	originDetect() {
+		// origin circle
+		bug.noFill();
+		bug.ellipse(this.origin.x, this.origin.y, this.origin.radius);
+
+		if (!this.touching(this.origin)) {
+			this.x = this.origin.x;
+			this.y = this.origin.y;
+			this.heading = random(PI * 2);
 		}
 	}
 
@@ -147,6 +192,13 @@ class Circle {
 		let dy = this.speed * sin(this.heading);
 		this.x += dx;
 		this.y += dy;
+
+		this.linePoints = {
+			x1: this.radius * cos(this.heading) + this.x,
+			y1: this.radius * sin(this.heading) + this.y,
+			x2: -this.radius * cos(this.heading) + this.x,
+			y2: -this.radius * sin(this.heading) + this.y,
+		};
 	}
 
 	behaviour2() {
@@ -162,7 +214,7 @@ class Circle {
 		for (let i = 0; i < circles.length; i++) {
 			if (circles[i] != this) {
 				if (this.touching(circles[i])) {
-					this.heading += random(-currentAngle, currentAngle);
+					this.heading += currentAngle / 50;
 				}
 			}
 		}
@@ -221,16 +273,7 @@ class Circle {
 	}
 
 	// both froms will render on the main canvas
-	form1() {
-		main.ellipseMode(RADIUS);
-		main.noFill();
-		main.stroke(0, 50);
-		main.ellipse(this.x, this.y, this.radius);
-
-		main.fill(255);
-		main.noStroke();
-		main.ellipse(this.x, this.y, 2);
-
+	renderLines() {
 		for (let i = 0; i < circles.length; i++) {
 			if (this.touching(circles[i])) {
 				// Make sure that cirlces are not being draw on top of eachother
@@ -244,7 +287,7 @@ class Circle {
 							0,
 							255
 						),
-						50
+						globalAlpha
 					);
 					// Draw a line between the centres of the circles
 					main.line(this.x, this.y, circles[i].x, circles[i].y);
@@ -253,54 +296,66 @@ class Circle {
 		}
 	}
 
-	form2() {
+	renderCircles() {
 		main.noFill();
 		for (let i = 0; i < circles.length; i++) {
 			if (this.touching(circles[i])) {
-				if (this.distance(circles[i]) > 0) {
+				// this fixes the random cross canvas intersections
+				let circleDistance = this.distance(circles[i]);
+				if (circleDistance < width / 2) {
 					// Calculate the grey value using the map function based on the distance between the circles
 					main.stroke(
-						map(
-							this.distance(circles[i]),
-							0,
-							this.radius + circles[i].radius,
-							0,
-							255
-						),
-						50
+						map(circleDistance, 0, this.radius + circles[i].radius, 250, 0),
+						globalAlpha
 					);
 
 					// find the midpoint between the circle objects that interect
 					let x = lerp(this.x, circles[i].x, 0.5);
 					let y = lerp(this.y, circles[i].y, 0.5);
 
-					main.fill(
-						255,
+					main.ellipse(x, y, circleDistance);
+				}
+			}
+		}
+	}
+
+	// both froms will render on the main canvas
+	renderQuads() {
+		main.noFill();
+
+		for (let i = 0; i < circles.length; i++) {
+			if (this.intersects(circles[i])) {
+				// Make sure that cirlces are not being draw on top of eachother
+				if (this.distance(circles[i]) < width / 2) {
+					// Calculate the grey value using the map function based on the distance between the circles
+					main.stroke(
+						this.grey,
 						map(
 							this.distance(circles[i]),
 							0,
 							this.radius + circles[i].radius,
-							0,
-							255
-						),
-						map(
-							this.distance(circles[i]),
-							0,
-							this.radius + circles[i].radius,
-							0,
-							255
-						),
-						50
+							255,
+							0
+						)
 					);
-					// Draw an ellipse with the radius of the distance between circles
-					main.ellipse(
-						x,
-						y,
-						this.distance(circles[i]),
-						this.distance(circles[i])
+
+					// Draw a line between the centres of the circles
+					main.quad(
+						this.linePoints.x1,
+						this.linePoints.y1,
+						circles[i].linePoints.x1,
+						circles[i].linePoints.y1,
+						this.linePoints.x2,
+						this.linePoints.y2,
+						circles[i].linePoints.x2,
+						circles[i].linePoints.y2
 					);
 				}
 			}
+
+			main.fill(this.grey, globalAlpha);
+			main.noStroke();
+			main.ellipse(this.x, this.y, 3);
 		}
 	}
 
@@ -312,5 +367,25 @@ class Circle {
 	distance(other) {
 		// 	calculate the distance between circles
 		return dist(this.x, this.y, other.x, other.y);
+	}
+}
+
+// native p5 event function
+function keyPressed() {
+	// r key
+	// start recording
+	if (keyCode === 82) {
+		capturer.start();
+	}
+
+	// s key
+	if (keyCode === 83) {
+		capturer.save();
+	}
+
+	// e key
+	// EXPORT
+	if (keyCode === 69) {
+		capturer.stop();
 	}
 }
