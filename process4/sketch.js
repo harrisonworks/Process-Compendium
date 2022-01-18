@@ -55,25 +55,6 @@ function draw() {
 	capturer.capture(document.getElementById('defaultCanvas0'));
 }
 
-function keyPressed() {
-	// r key
-	// start recording
-	if (keyCode === 82) {
-		capturer.start();
-	}
-
-	// s key
-	if (keyCode === 83) {
-		capturer.save();
-	}
-
-	// e key
-	// EXPORT
-	if (keyCode === 69) {
-		capturer.stop();
-	}
-}
-
 function CircleInit() {
 	// clear array
 	circles = [];
@@ -301,5 +282,24 @@ class Circle {
 	distance(other) {
 		// 	calculate the distance between circles
 		return dist(this.x, this.y, other.x, other.y);
+	}
+}
+
+function keyPressed() {
+	// r key
+	// start recording
+	if (keyCode === 82) {
+		capturer.start();
+	}
+
+	// s key
+	if (keyCode === 83) {
+		capturer.save();
+	}
+
+	// e key
+	// EXPORT
+	if (keyCode === 69) {
+		capturer.stop();
 	}
 }

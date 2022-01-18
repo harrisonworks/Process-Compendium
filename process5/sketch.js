@@ -15,7 +15,7 @@ let currentAngle;
 
 let circles = [];
 
-let DEBUG = true;
+let DEBUG = false;
 
 let capturer = new CCapture({
 	format: 'png',
@@ -46,10 +46,11 @@ function draw() {
 	}
 
 	// click to see the debug mode
-	if (mouseIsPressed) {
+	if (mouseIsPressed || DEBUG) {
 		image(bug, 0, 0, 1000, 1000);
+	} else {
+		image(main, 0, 0, 1000, 1000);
 	}
-	image(main, 0, 0, 1000, 1000);
 
 	capturer.capture(document.getElementById('defaultCanvas0'));
 }
@@ -115,8 +116,7 @@ class Circle {
 
 	debug() {
 		// all renderable functions are on the bug canvas
-		bug.stroke(192, 0, 0);
-		bug.strokeWeight(2);
+		bug.stroke(0);
 		bug.ellipseMode(RADIUS);
 
 		bug.push();
@@ -130,7 +130,7 @@ class Circle {
 		bug.line(0, 0, this.radius, 0);
 		bug.pop();
 
-		bug.stroke(192, 192, 0, 255);
+		bug.stroke(192, 0, 0, 255);
 
 		for (let i = 0; i < circles.length; i++) {
 			if (this.touching(circles[i])) {

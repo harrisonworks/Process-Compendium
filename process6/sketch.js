@@ -20,7 +20,7 @@ let currentAngle;
 
 let circles = [];
 
-let DEBUG = true;
+let DEBUG = false;
 
 let capturer = new CCapture({
 	format: 'png',
@@ -51,31 +51,13 @@ function draw() {
 	}
 
 	// click to see the debug mode
-	if (mouseIsPressed) {
+	if (mouseIsPressed || DEBUG) {
 		image(bug, 0, 0, 1000, 1000);
+	} else {
+		image(main, 0, 0, 1000, 1000);
 	}
-	image(main, 0, 0, 1000, 1000);
 
 	capturer.capture(document.getElementById('defaultCanvas0'));
-}
-
-function keyPressed() {
-	// r key
-	// start recording
-	if (keyCode === 82) {
-		capturer.start();
-	}
-
-	// s key
-	if (keyCode === 83) {
-		capturer.save();
-	}
-
-	// e key
-	// EXPORT
-	if (keyCode === 69) {
-		capturer.stop();
-	}
 }
 
 function CircleInit() {
@@ -361,5 +343,24 @@ class Circle {
 	distance(other) {
 		// 	calculate the distance between circles
 		return dist(this.x, this.y, other.x, other.y);
+	}
+}
+
+function keyPressed() {
+	// r key
+	// start recording
+	if (keyCode === 82) {
+		capturer.start();
+	}
+
+	// s key
+	if (keyCode === 83) {
+		capturer.save();
+	}
+
+	// e key
+	// EXPORT
+	if (keyCode === 69) {
+		capturer.stop();
 	}
 }
