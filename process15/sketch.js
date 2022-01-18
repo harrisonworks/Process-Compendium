@@ -1,22 +1,24 @@
 // FROM PROCESS COMPENDIUM
 
-// Process 14
+// Process 15
 
-// A rectangular surface filled with instances of Element 4,
-// each with a different size and direction. Display the intersections
-// by drawing a circle at each point of contact. Set the size of each
-// circle relative to the distance between the centers of the overlapping
-// Elements. Draw the smallest possible circle as white and the largest
-// as black, with varying grays representing sizes in between.
+// A rectangular surface filled with instances of Element 3, each with
+// a different size and gray value. Draw a small, transparent circle at
+// the midpoint of each Element. Increase the circles opacity while its
+// Element is touching another Element and decrease while it is not.
 
-let circleNum = 40;
-let radiusMin = 30;
-let radiusMax = 50;
+let circleNum = 20;
+let radiusMin = 50;
+let radiusMax = 150;
 
 let globalAlpha = 20;
 
 let bug, main;
 let currentAngle;
+
+// Ellipses touching (form 1)
+// Lines intersecting (form 2)
+let mode = 2;
 
 let circles = [];
 let DEBUG = false;
@@ -56,6 +58,7 @@ function draw() {
 		image(main, 0, 0, 1000, 1000);
 	}
 
+	// console.log(circles[1].alpha);
 	capturer.capture(document.getElementById('defaultCanvas0'));
 }
 
@@ -84,7 +87,9 @@ class Elements {
 		this.heading = random(PI * 2);
 		this.speed = speed;
 
-		this.grey = random(20, 200);
+		this.grey = random(0, 255);
+
+		this.alpha = 0;
 
 		this.linePoints = {
 			x1: -this.radius + this.x,
@@ -96,10 +101,10 @@ class Elements {
 
 	update() {
 		this.behaviour1();
-		this.behaviour2();
+		// this.behaviour2();
 		this.behaviour3();
 		// this.behaviour4();
-		// this.behaviour5();
+		this.behaviour5();
 		// this.behaviour6();
 		// this.behaviour7();
 
@@ -133,7 +138,7 @@ class Elements {
 		bug.noFill();
 		for (let i = 0; i < circles.length; i++) {
 			// console.log(localLine, otherLine);
-			if (this.touching(circles[i])) {
+			if (this.formTest(circles[i])) {
 				// bug.quad(
 				// 	this.linePoints.x1,
 				// 	this.linePoints.y1,
@@ -149,37 +154,13 @@ class Elements {
 		}
 	}
 
-	// this is detects the intersection of lines
-	intersects(other) {
-		let localLine = this.linePoints;
-		let otherLine = other.linePoints;
-
-		let det, gamma, lambda;
-		det =
-			(localLine.x2 - localLine.x1) * (otherLine.y2 - otherLine.y1) -
-			(otherLine.x2 - otherLine.x1) * (localLine.y2 - localLine.y1);
-		if (det === 0) {
-			return false;
-		} else {
-			lambda =
-				((otherLine.y2 - otherLine.y1) * (otherLine.x2 - localLine.x1) +
-					(otherLine.x1 - otherLine.x2) * (otherLine.y2 - localLine.y1)) /
-				det;
-			gamma =
-				((localLine.y1 - localLine.y2) * (otherLine.x2 - localLine.x1) +
-					(localLine.x2 - localLine.x1) * (otherLine.y2 - localLine.y1)) /
-				det;
-			return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
-		}
-	}
-
 	// check if object has left origin
 	originDetect() {
 		// origin circle
 		bug.noFill();
 		bug.ellipse(this.origin.x, this.origin.y, this.origin.radius);
 
-		if (!this.touching(this.origin)) {
+		if (!this.formTest(this.origin)) {
 			this.x = this.origin.x;
 			this.y = this.origin.y;
 			this.heading = random(PI * 2);
@@ -213,7 +194,7 @@ class Elements {
 		// While touching another, change direction
 		for (let i = 0; i < circles.length; i++) {
 			if (circles[i] != this) {
-				if (this.touching(circles[i])) {
+				if (this.formTest(circles[i])) {
 					this.heading += currentAngle / 50;
 				}
 			}
@@ -249,7 +230,7 @@ class Elements {
 			// If a circle is not this one (not itself)
 			if (circles[i] != this) {
 				// If the two circles are touching
-				if (this.touching(circles[i])) {
+				if (this.formTest(circles[i])) {
 					let other = circles[i];
 					// Calculate the direction towards the other circle using the `atan2()` function
 					let direction = atan2(other.y - y, other.x - x);
@@ -275,7 +256,7 @@ class Elements {
 	// both froms will render on the main canvas
 	renderLines() {
 		for (let i = 0; i < circles.length; i++) {
-			if (this.touching(circles[i])) {
+			if (this.formTest(circles[i])) {
 				// Make sure that cirlces are not being draw on top of eachother
 				if (this.distance(circles[i]) > 0) {
 					// Calculate the grey value using the map function based on the distance between the circles
@@ -299,23 +280,26 @@ class Elements {
 	renderCircles() {
 		main.noFill();
 		for (let i = 0; i < circles.length; i++) {
-			if (this.touching(circles[i])) {
+			if (this.formTest(circles[i])) {
 				// this fixes the random cross canvas intersections
 				let circleDistance = this.distance(circles[i]);
 				if (circleDistance < width / 2) {
 					// Calculate the grey value using the map function based on the distance between the circles
-					main.stroke(
-						map(circleDistance, 0, this.radius + circles[i].radius, 250, 0),
-						globalAlpha
-					);
 
 					// find the midpoint between the circle objects that interect
-					let x = lerp(this.x, circles[i].x, 0.5);
-					let y = lerp(this.y, circles[i].y, 0.5);
+					// let x = lerp(this.x, circles[i].x, 0.5);
+					// let y = lerp(this.y, circles[i].y, 0.5);
 
-					main.ellipse(x, y, circleDistance);
+					// increase alpha when points are intersecting
+					this.alpha += 5;
 				}
 			}
+			// slowly reduce if not
+			if (this.alpha >= 0) this.alpha -= 1;
+
+			main.stroke(this.grey, this.alpha);
+
+			main.ellipse(this.x, this.y, radiusMin);
 		}
 	}
 
@@ -324,7 +308,7 @@ class Elements {
 		main.noFill();
 
 		for (let i = 0; i < circles.length; i++) {
-			if (this.intersects(circles[i])) {
+			if (this.formTest(circles[i])) {
 				// Make sure that cirlces are not being draw on top of eachother
 				if (this.distance(circles[i]) < width / 2) {
 					// Calculate the grey value using the map function based on the distance between the circles
@@ -359,6 +343,11 @@ class Elements {
 		}
 	}
 
+	formTest(other) {
+		if (mode === 1) return this.touching(other);
+		else return this.intersects(other);
+	}
+
 	touching(other) {
 		// 	Detect if circles are touching
 		return this.distance(other) < this.radius + other.radius;
@@ -367,6 +356,30 @@ class Elements {
 	distance(other) {
 		// 	calculate the distance between circles
 		return dist(this.x, this.y, other.x, other.y);
+	}
+
+	// this is detects the intersection of lines
+	intersects(other) {
+		let localLine = this.linePoints;
+		let otherLine = other.linePoints;
+
+		let det, gamma, lambda;
+		det =
+			(localLine.x2 - localLine.x1) * (otherLine.y2 - otherLine.y1) -
+			(otherLine.x2 - otherLine.x1) * (localLine.y2 - localLine.y1);
+		if (det === 0) {
+			return false;
+		} else {
+			lambda =
+				((otherLine.y2 - otherLine.y1) * (otherLine.x2 - localLine.x1) +
+					(otherLine.x1 - otherLine.x2) * (otherLine.y2 - localLine.y1)) /
+				det;
+			gamma =
+				((localLine.y1 - localLine.y2) * (otherLine.x2 - localLine.x1) +
+					(localLine.x2 - localLine.x1) * (otherLine.y2 - localLine.y1)) /
+				det;
+			return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
+		}
 	}
 }
 
