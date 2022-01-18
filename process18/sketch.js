@@ -13,12 +13,14 @@ let radiusMax = 100;
 
 let globalAlpha = 20;
 
+let mainB = 250;
+
 let bug, main;
 let currentAngle;
 
 // Ellipses touching (form 1)
 // Lines intersecting (form 2)
-let mode = 2;
+let form = 2;
 
 let circles = [];
 let DEBUG = false;
@@ -30,9 +32,9 @@ let capturer = new CCapture({
 function setup() {
 	createCanvas(1000, 1000);
 
-	background(250);
-
+	background(mainB);
 	currentAngle = (PI * 2) / 36;
+
 	strokeWeight(0.5);
 
 	// debug canvas
@@ -44,8 +46,8 @@ function setup() {
 }
 
 function draw() {
-	background(250);
-	bug.background(250);
+	background(mainB);
+	bug.background(mainB);
 
 	for (let i = 0; i < circles.length; i++) {
 		circles[i].update();
@@ -117,7 +119,7 @@ class Elements {
 
 	debug() {
 		// all renderable functions are on the bug canvas
-		bug.stroke(0);
+		bug.stroke(255 - mainB);
 		bug.ellipseMode(RADIUS);
 
 		bug.push();
@@ -333,7 +335,7 @@ class Elements {
 	}
 
 	formTest(other) {
-		if (mode === 1) return this.touching(other);
+		if (form === 1) return this.touching(other);
 		else return this.intersects(other);
 	}
 
