@@ -8,7 +8,7 @@
 // opacity of the dot and quadrilateral while the Elements are touching and decrease
 // while they are not.
 
-let circleNum = 20;
+let circleNum = 50;
 let radiusMin = 30;
 let radiusMax = 50;
 
@@ -18,7 +18,7 @@ let bug, main;
 let currentAngle;
 
 let circles = [];
-let DEBUG = true;
+let DEBUG = false;
 
 let capturer = new CCapture({
 	format: 'png',
@@ -142,7 +142,7 @@ class Elements {
 		this.heading = random(PI * 2);
 		this.speed = speed;
 
-		this.origin = origin;
+		this.grey = random(20, 200);
 
 		this.linePoints = {
 			x1: -this.radius + this.x,
@@ -164,7 +164,8 @@ class Elements {
 		// this.originDetect();
 		this.debug();
 		// this.renderLines();
-		this.renderCircles();
+		// this.renderCircles();
+		this.renderQuads();
 	}
 
 	debug() {
@@ -187,17 +188,27 @@ class Elements {
 		bug.pop();
 
 		bug.stroke(192, 0, 0, 255);
-
+		bug.noFill();
 		for (let i = 0; i < circles.length; i++) {
 			// console.log(localLine, otherLine);
 			if (this.intersects(circles[i])) {
-				bug.line(this.x, this.y, circles[i].x, circles[i].y);
+				bug.quad(
+					this.linePoints.x1,
+					this.linePoints.y1,
+					circles[i].linePoints.x1,
+					circles[i].linePoints.y1,
+					this.linePoints.x2,
+					this.linePoints.y2,
+					circles[i].linePoints.x2,
+					circles[i].linePoints.y2
+				);
+				// bug.line(this.x, this.y, circles[i].x, circles[i].y);
 			}
 		}
 
 		// origin circle
-		bug.noFill();
-		bug.ellipse(this.origin.x, this.origin.y, this.origin.radius);
+		// bug.noFill();
+		// bug.ellipse(this.origin.x, this.origin.y, this.origin.radius);
 	}
 
 	// this is detects the intersection of lines
@@ -260,8 +271,8 @@ class Elements {
 		// While touching another, change direction
 		for (let i = 0; i < circles.length; i++) {
 			if (circles[i] != this) {
-				if (this.touching(circles[i])) {
-					this.heading += currentAngle / 150;
+				if (this.intersects(circles[i])) {
+					this.heading += currentAngle / 10;
 				}
 			}
 		}
@@ -369,6 +380,46 @@ class Elements {
 					main.ellipse(x, y, 5);
 				}
 			}
+		}
+	}
+
+	// both froms will render on the main canvas
+	renderQuads() {
+		main.noFill();
+
+		for (let i = 0; i < circles.length; i++) {
+			if (this.intersects(circles[i])) {
+				// Make sure that cirlces are not being draw on top of eachother
+				if (this.distance(circles[i]) < width / 2) {
+					// Calculate the grey value using the map function based on the distance between the circles
+					main.stroke(
+						this.grey,
+						map(
+							this.distance(circles[i]),
+							0,
+							this.radius + circles[i].radius,
+							255,
+							0
+						)
+					);
+
+					// Draw a line between the centres of the circles
+					main.quad(
+						this.linePoints.x1,
+						this.linePoints.y1,
+						circles[i].linePoints.x1,
+						circles[i].linePoints.y1,
+						this.linePoints.x2,
+						this.linePoints.y2,
+						circles[i].linePoints.x2,
+						circles[i].linePoints.y2
+					);
+				}
+			}
+
+			main.fill(this.grey, globalAlpha);
+			main.noStroke();
+			main.ellipse(this.x, this.y, 3);
 		}
 	}
 
