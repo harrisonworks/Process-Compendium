@@ -303,3 +303,16 @@ function keyPressed() {
 		capturer.stop();
 	}
 }
+
+function reinitalise() {
+	main.remove();
+	bug.remove();
+	createCanvas(windowWidth, windowHeight);
+
+	// debug canvas
+	bug = createGraphics(windowWidth, windowHeight);
+	// main canvas
+	main = createGraphics(windowWidth, windowHeight);
+
+	CircleInit();
+}
