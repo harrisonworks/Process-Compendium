@@ -7,7 +7,7 @@
 // of Elements that are touching. Increase the opacity of the quadrilateral while
 // the Elements are touching and decrease while they are not.
 
-let circleNum = 20;
+let circleNum = 50;
 let radiusMin = 50;
 let radiusMax = 100;
 

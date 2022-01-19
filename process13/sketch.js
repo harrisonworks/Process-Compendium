@@ -8,7 +8,7 @@
 // that are touching. Set the value of the shortest possible line to black and the
 // longest to white, with varying grays representing values in between.
 
-let circleNum = 20;
+let circleNum = 75;
 let radiusMin = 30;
 let radiusMax = 50;
 

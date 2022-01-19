@@ -8,7 +8,7 @@
 // the centers of Elements that are touching. Set the value of the shortest possible
 // line to black and the longest to white, with varying grays representing values in between.
 
-let circleNum = 20;
+let circleNum = 50;
 let radiusMin = 30;
 let radiusMax = 50;
 
@@ -94,7 +94,7 @@ class Elements {
 		this.radius = radius;
 
 		this.heading = random(PI * 2);
-		this.speed = 1;
+		this.speed = random(1, 2);
 
 		this.origin = origin;
 

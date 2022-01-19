@@ -7,7 +7,7 @@
 // the midpoint of each Element. Increase the circles opacity while its
 // Element is touching another Element and decrease while it is not.
 
-let circleNum = 20;
+let circleNum = 50;
 let radiusMin = 50;
 let radiusMax = 150;
 

@@ -8,7 +8,7 @@
 // opacity of the dot and quadrilateral while the Elements are touching and decrease
 // while they are not.
 
-let circleNum = 50;
+let circleNum = 100;
 let radiusMin = 30;
 let radiusMax = 50;
 
@@ -143,7 +143,7 @@ class Elements {
 		this.speed = speed;
 
 		this.grey = random(20, 200);
-
+		this.alpha = 0;
 		this.linePoints = {
 			x1: -this.radius + this.x,
 			y1: 0 + this.y,
@@ -375,7 +375,7 @@ class Elements {
 
 					main.stroke(
 						map(circleDistance, 0, this.radius + circles[i].radius, 0, 255),
-						globalAlpha
+						this.alpha
 					);
 					main.ellipse(x, y, 5);
 				}
@@ -391,17 +391,11 @@ class Elements {
 			if (this.intersects(circles[i])) {
 				// Make sure that cirlces are not being draw on top of eachother
 				if (this.distance(circles[i]) < width / 2) {
+					this.alpha += 3;
+					main.noFill();
+
 					// Calculate the grey value using the map function based on the distance between the circles
-					main.stroke(
-						this.grey,
-						map(
-							this.distance(circles[i]),
-							0,
-							this.radius + circles[i].radius,
-							255,
-							0
-						)
-					);
+					main.stroke(this.grey, this.alpha);
 
 					// Draw a line between the centres of the circles
 					main.quad(
@@ -414,12 +408,13 @@ class Elements {
 						circles[i].linePoints.x2,
 						circles[i].linePoints.y2
 					);
+
+					main.fill(this.grey, this.alpha * 5);
+					main.noStroke();
+					main.ellipse(this.x, this.y, 3);
 				}
 			}
-
-			main.fill(this.grey, globalAlpha);
-			main.noStroke();
-			main.ellipse(this.x, this.y, 3);
+			if (this.alpha > 0) this.alpha--;
 		}
 	}
 

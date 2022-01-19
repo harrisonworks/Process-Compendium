@@ -49,9 +49,9 @@ function draw() {
 	// click to see the debug mode
 	if (mouseIsPressed) {
 		image(bug, 0, 0, 1000, 1000);
+	} else {
+		image(main, 0, 0, 1000, 1000);
 	}
-	image(main, 0, 0, 1000, 1000);
-
 	capturer.capture(document.getElementById('defaultCanvas0'));
 }
 

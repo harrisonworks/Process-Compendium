@@ -285,7 +285,7 @@ class Elements {
 				// this fixes the random cross canvas intersections
 				let circleDistance = this.distance(circles[i]);
 				if (circleDistance < width / 2) {
-					// Calculate the grey value using the map function based on the distance between the circles
+					this.alpha += 5;
 
 					// find the midpoint between the circle objects that interect
 					let x = lerp(this.x, circles[i].x, 0.5);
@@ -305,7 +305,6 @@ class Elements {
 						)
 					);
 					// increase alpha when points are intersecting
-					this.alpha += 8;
 				}
 			}
 			// slowly reduce if not

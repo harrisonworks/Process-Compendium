@@ -9,7 +9,7 @@
 // Draw the smallest possible circle as black and largest as white, with varying
 // grays representing sizes in between.
 
-let circleNum = 100;
+let circleNum = 70;
 let radiusMin = 20;
 let radiusMax = 50;
 

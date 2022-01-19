@@ -10,7 +10,7 @@
 // Set the value of the shortest possible line to black and the longest to white,
 // with varying grays representing values in between.
 
-let circleNum = 20;
+let circleNum = 50;
 let radiusMin = 20;
 let radiusMax = 50;
 let originNumber = 3;
@@ -66,7 +66,7 @@ function CircleInit() {
 
 	// create three circles that do not overlap
 	let originList = [];
-	let radiusTarget = width / 4;
+	let radiusTarget = width / 3;
 	let protection = 0;
 	while (originList.length < originNumber) {
 		// Pick a random circle

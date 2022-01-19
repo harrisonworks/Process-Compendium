@@ -10,9 +10,9 @@
 // Draw the smallest possible circle as white and largest as black, with varying grays
 // representing sizes in between.
 
-let circleNum = 20;
+let circleNum = 50;
 let radiusMin = 50;
-let radiusMax = 100;
+let radiusMax = 70;
 let originNumber = 3;
 
 let bug, main;
@@ -141,7 +141,7 @@ class Elements {
 		this.radius = radius;
 
 		this.heading = random(PI * 2);
-		this.speed = 1;
+		this.speed = random(1, 2);
 
 		this.origin = origin;
 
