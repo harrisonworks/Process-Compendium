@@ -38,7 +38,7 @@
   <meta name="theme-color" content="#ffffff">
 
   <!-- vue import -->
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue@next"></script>
   <!-- bootstrap import -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -198,7 +198,7 @@
 
       </header>
 
-      <div id="app_loops" class="d-flex flex-wrap">
+      <div id="app" class="d-flex flex-wrap">
         <project-item v-for=" (project, index) in projects" :key="index" :content="project" />
 
       </div>
@@ -212,7 +212,118 @@
 
 <script type="module">
 
-  Vue.component("project-item", {
+  const app = Vue.createApp({
+    data() {
+      return {
+        projects: [
+          {
+            image: "./thumbnails/process4.jpeg",
+            link: './process4/index.html',
+            title: 'Process 4',
+            subtitle: 'A rectangular surface filled with varying sizes of Element 1. Draw a line from the centers of Elements that are touching. Set the value of the shortest possible line to black and the longest to white, with varying grays representing values in between.',
+          },
+          {
+            image: "./thumbnails/process5.jpeg",
+            link: './process5/index.html',
+            title: 'Process 5',
+            subtitle: 'A rectangular surface filled with varying sizes of Element 1. Draw the perimeter of each Element as a black line and the center as a white dot. Draw a gray line from the centers of Elements that are touching.',
+
+          },
+          {
+            image: "./thumbnails/process6.jpeg",
+            link: './process6/index.html',
+            title: 'Process 6',
+            subtitle: 'Position three large circles on a rectangular surface. Set the center of each circle as the origin for a large group of Element 1. When an Element moves beyond the edge of its circle, return to the origin. Draw a line from the centers of Elements that are touching. Set the value of the shortest possible line to black and the longest to white, with varying grays representing values in between.',
+
+          },
+          {
+            image: "./thumbnails/process7.jpeg",
+            link: './process7/index.html',
+            title: 'Process 7',
+            subtitle: 'A rectangular surface filled with varying sizes of Element 1. Draw a line from the centers of Elements that are touching. Set the value of the shortest possible line to white and the longest to black, with varying grays representing values in between. Draw the perimeter of each Element as a black line and the center as a white dot.',
+
+          },
+          {
+            image: "./thumbnails/process8.jpeg",
+            link: './process8/index.html',
+            title: 'Process 8',
+            subtitle: 'A rectangular surface densely filled with instances of Element 2, each with a different size, speed, and direction. Display the intersections by drawing a circle at each point of contact. Set the size of each circle relative to the distance between the centers of the overlapping Elements. Draw the smallest possible circle as black and largest as white, with varying grays representing sizes in between.',
+
+          },
+          {
+            image: "./thumbnails/process9.jpeg",
+            link: './process9/index.html',
+            title: 'Process 9',
+            subtitle: 'Position three large circles on a rectangular surface. Set the center of each circle as the origin for a large group of Element 2. When an Element moves beyond the edge of its circle, return to the origin. Display the intersections by drawing a circle at each point of contact. Set the size of each circle relative to the distance between the centers of the overlapping Elements. Draw the smallest possible circle as white and largest as black, with varying grays representing sizes in between.',
+
+          },
+          {
+            image: "./thumbnails/process10.jpeg",
+            link: './process10/index.html',
+            title: 'Process 10',
+            subtitle: 'Position a circle at the center of a rectangular surface. Set the center of the circle as the origin for a large group of Element 1. When an Element moves beyond the edge of its circle, return to the origin. Draw a line from the centers of Elements that are touching. Set the value of the shortest possible line to black and the longest to white, with varying grays representing values in between.',
+          },
+          {
+            image: "./thumbnails/process11.jpeg",
+            link: './process11/index.html',
+            title: 'Process 11',
+            subtitle: 'A rectangular surface filled with instances of Element 2, each with a different size, speed, and direction. Display the intersections by drawing a circle at each point of contact. Set the size of one circle to be relative to the distance between the centers of the overlapping Elements and make the other circle tiny. Draw the smallest possible circle as white and largest as black, with varying grays representing sizes in between.',
+          },
+          {
+            image: "./thumbnails/process12.jpeg",
+            link: './process12/index.html',
+            title: 'Process 12',
+            subtitle: 'A rectangular surface filled with instances of Element 3, each with a different size and gray value. Draw a dot at the center of each line. Draw a quadrilateral connecting the endpoints of each pair of Elements that are touching. Increase the opacity of the dot and quadrilateral while the Elements are touching and decrease while they are not.',
+
+          },
+          {
+            image: "./thumbnails/process13.jpeg",
+            link: './process13/index.html',
+            title: 'Process 13',
+            subtitle: 'Bisect a rectangular surface and define the dividing line as the origin for a large group of Element 1. When each Element moves beyond the surface, move its position back to the origin. Draw a line from the centers of Elements that are touching. Set the value of the shortest possible line to black and the longest to white, with varying grays representing values in between.',
+
+          },
+          {
+            image: "./thumbnails/process14.jpeg",
+            link: './process14/index.html',
+            title: 'Process 14',
+            subtitle: 'A rectangular surface filled with instances of Element 4, each with a different size and direction. Display the intersections by drawing a circle at each point of contact. Set the size of each circle relative to the distance between the centers of the overlapping Elements. Draw the smallest possible circle as white and the largest as black, with varying grays representing sizes in between.',
+
+          },
+          {
+            image: "./thumbnails/process15.jpeg",
+            link: './process15/index.html',
+            title: 'Process 15',
+            subtitle: 'A rectangular surface filled with instances of Element 3, each with a different size and gray value. Draw a small, transparent circle at the midpoint of each Element. Increase the circle?s opacity while its Element is touching another Element and decrease while it is not.',
+
+          },
+          {
+            image: "./thumbnails/process16.jpeg",
+            link: './process16/index.html',
+            title: 'Process 16',
+            subtitle: 'A rectangular surface filled with instances of Element 3, each with a different size and gray value. Draw a tiny, transparent circle at the midpoint of each Element. Increase a circle?s size and opacity while its Element is touching another Element and decrease while it is not.',
+
+          },
+          {
+            image: "./thumbnails/process17.jpeg",
+            link: './process17/index.html',
+            title: 'Process 17',
+            subtitle: 'A rectangular surface filled with instances of Element 5, each with a different size and gray value. Draw a transparent circle at the midpoint of each Element. Increase a circle?s size and opacity while its Element is touching another Element and decrease while it is not.',
+
+          },
+          {
+            image: "./thumbnails/process18.jpeg",
+            link: './process18/index.html',
+            title: 'Process 18',
+            subtitle: 'A rectangular surface filled with instances of Element 5, each with a different size and gray value. Draw a quadrilateral connecting the endpoints of each pair of Elements that are touching. Increase the opacity of the quadrilateral while the Elements are touching and decrease while they are not.',
+
+          }
+        ],
+      }
+    }
+  })
+
+  app.component("project-item", {
     props: ["content"],
     template: `<a :href="content.link" class="card">
       <div :style="{ backgroundImage: 'url(' + content.image + ')' }" class="card-img">
@@ -225,114 +336,7 @@
     </a>`,
   })
 
-  new Vue({
-    el: "#app_loops",
-    data: {
-      projects: [
-        {
-          image: "./thumbnails/process4.jpeg",
-          link: './process4/index.html',
-          title: 'Process 4',
-          subtitle: 'A rectangular surface filled with varying sizes of Element 1. Draw a line from the centers of Elements that are touching. Set the value of the shortest possible line to black and the longest to white, with varying grays representing values in between.',
-        },
-        {
-          image: "./thumbnails/process5.jpeg",
-          link: './process5/index.html',
-          title: 'Process 5',
-          subtitle: 'A rectangular surface filled with varying sizes of Element 1. Draw the perimeter of each Element as a black line and the center as a white dot. Draw a gray line from the centers of Elements that are touching.',
 
-        },
-        {
-          image: "./thumbnails/process6.jpeg",
-          link: './process6/index.html',
-          title: 'Process 6',
-          subtitle: 'Position three large circles on a rectangular surface. Set the center of each circle as the origin for a large group of Element 1. When an Element moves beyond the edge of its circle, return to the origin. Draw a line from the centers of Elements that are touching. Set the value of the shortest possible line to black and the longest to white, with varying grays representing values in between.',
-
-        },
-        {
-          image: "./thumbnails/process7.jpeg",
-          link: './process7/index.html',
-          title: 'Process 7',
-          subtitle: 'A rectangular surface filled with varying sizes of Element 1. Draw a line from the centers of Elements that are touching. Set the value of the shortest possible line to white and the longest to black, with varying grays representing values in between. Draw the perimeter of each Element as a black line and the center as a white dot.',
-
-        },
-        {
-          image: "./thumbnails/process8.jpeg",
-          link: './process8/index.html',
-          title: 'Process 8',
-          subtitle: 'A rectangular surface densely filled with instances of Element 2, each with a different size, speed, and direction. Display the intersections by drawing a circle at each point of contact. Set the size of each circle relative to the distance between the centers of the overlapping Elements. Draw the smallest possible circle as black and largest as white, with varying grays representing sizes in between.',
-
-        },
-        {
-          image: "./thumbnails/process9.jpeg",
-          link: './process9/index.html',
-          title: 'Process 9',
-          subtitle: 'Position three large circles on a rectangular surface. Set the center of each circle as the origin for a large group of Element 2. When an Element moves beyond the edge of its circle, return to the origin. Display the intersections by drawing a circle at each point of contact. Set the size of each circle relative to the distance between the centers of the overlapping Elements. Draw the smallest possible circle as white and largest as black, with varying grays representing sizes in between.',
-
-        },
-        {
-          image: "./thumbnails/process10.jpeg",
-          link: './process10/index.html',
-          title: 'Process 10',
-          subtitle: 'Position a circle at the center of a rectangular surface. Set the center of the circle as the origin for a large group of Element 1. When an Element moves beyond the edge of its circle, return to the origin. Draw a line from the centers of Elements that are touching. Set the value of the shortest possible line to black and the longest to white, with varying grays representing values in between.',
-        },
-        {
-          image: "./thumbnails/process11.jpeg",
-          link: './process11/index.html',
-          title: 'Process 11',
-          subtitle: 'A rectangular surface filled with instances of Element 2, each with a different size, speed, and direction. Display the intersections by drawing a circle at each point of contact. Set the size of one circle to be relative to the distance between the centers of the overlapping Elements and make the other circle tiny. Draw the smallest possible circle as white and largest as black, with varying grays representing sizes in between.',
-        },
-        {
-          image: "./thumbnails/process12.jpeg",
-          link: './process12/index.html',
-          title: 'Process 12',
-          subtitle: 'A rectangular surface filled with instances of Element 3, each with a different size and gray value. Draw a dot at the center of each line. Draw a quadrilateral connecting the endpoints of each pair of Elements that are touching. Increase the opacity of the dot and quadrilateral while the Elements are touching and decrease while they are not.',
-
-        },
-        {
-          image: "./thumbnails/process13.jpeg",
-          link: './process13/index.html',
-          title: 'Process 13',
-          subtitle: 'Bisect a rectangular surface and define the dividing line as the origin for a large group of Element 1. When each Element moves beyond the surface, move its position back to the origin. Draw a line from the centers of Elements that are touching. Set the value of the shortest possible line to black and the longest to white, with varying grays representing values in between.',
-
-        },
-        {
-          image: "./thumbnails/process14.jpeg",
-          link: './process14/index.html',
-          title: 'Process 14',
-          subtitle: 'A rectangular surface filled with instances of Element 4, each with a different size and direction. Display the intersections by drawing a circle at each point of contact. Set the size of each circle relative to the distance between the centers of the overlapping Elements. Draw the smallest possible circle as white and the largest as black, with varying grays representing sizes in between.',
-
-        },
-        {
-          image: "./thumbnails/process15.jpeg",
-          link: './process15/index.html',
-          title: 'Process 15',
-          subtitle: 'A rectangular surface filled with instances of Element 3, each with a different size and gray value. Draw a small, transparent circle at the midpoint of each Element. Increase the circle?s opacity while its Element is touching another Element and decrease while it is not.',
-
-        },
-        {
-          image: "./thumbnails/process16.jpeg",
-          link: './process16/index.html',
-          title: 'Process 16',
-          subtitle: 'A rectangular surface filled with instances of Element 3, each with a different size and gray value. Draw a tiny, transparent circle at the midpoint of each Element. Increase a circle?s size and opacity while its Element is touching another Element and decrease while it is not.',
-
-        },
-        {
-          image: "./thumbnails/process17.jpeg",
-          link: './process17/index.html',
-          title: 'Process 17',
-          subtitle: 'A rectangular surface filled with instances of Element 5, each with a different size and gray value. Draw a transparent circle at the midpoint of each Element. Increase a circle?s size and opacity while its Element is touching another Element and decrease while it is not.',
-
-        },
-        {
-          image: "./thumbnails/process18.jpeg",
-          link: './process18/index.html',
-          title: 'Process 18',
-          subtitle: 'A rectangular surface filled with instances of Element 5, each with a different size and gray value. Draw a quadrilateral connecting the endpoints of each pair of Elements that are touching. Increase the opacity of the quadrilateral while the Elements are touching and decrease while they are not.',
-
-        }
-      ],
-    },
-  })
+  app.mount('#app')
 
 </script>
