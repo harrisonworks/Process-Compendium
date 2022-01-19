@@ -68,17 +68,22 @@
 
     }
 
-    #defaultCanvas0 {
+    #myContainer {
       position: fixed;
       top: 0px;
       left: 0px;
       z-index: 0;
     }
 
+    #defaultCanvas0 {
+      display: block;
+
+    }
+
     main,
     footer {
-      transform: translate(0px, 0px);
-      z-index: 5;
+      position: relative;
+      z-index: 5 !important;
     }
 
 
@@ -167,7 +172,6 @@
 </head>
 
 <body>
-  <div id="myContainer"></div>
 
   <main class="container py-5">
 
@@ -227,6 +231,7 @@
     brought back to life by <a href="https://harrison.works" target="_blank" rel="noopener noreferrer">Harrison</a>
   </footer>
 
+  <div id="myContainer"></div>
 
 </body>
 

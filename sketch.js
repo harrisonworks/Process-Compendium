@@ -256,15 +256,16 @@ class Elements {
 	}
 }
 
+// disable so it doesn't block mobile
 // makes p5.js better for mobile
-function touchStarted() {
-	return false;
-}
+// function touchStarted() {
+// 	return false;
+// }
 
-function touchMoved() {
-	return false;
-}
+// function touchMoved() {
+// 	return false;
+// }
 
-function touchEnded() {
-	return false;
-}
+// function touchEnded() {
+// 	return false;
+// }
