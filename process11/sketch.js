@@ -383,3 +383,16 @@ class Elements {
 		return dist(this.x, this.y, other.x, other.y);
 	}
 }
+
+// makes p5.js better for mobile
+function touchStarted() {
+	return false;
+}
+
+function touchMoved() {
+	return false;
+}
+
+function touchEnded() {
+	return false;
+}

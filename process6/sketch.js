@@ -364,3 +364,16 @@ function keyPressed() {
 		capturer.stop();
 	}
 }
+
+// makes p5.js better for mobile
+function touchStarted() {
+	return false;
+}
+
+function touchMoved() {
+	return false;
+}
+
+function touchEnded() {
+	return false;
+}
