@@ -126,7 +126,6 @@
       background: #c4c4c4;
       background-position: center;
       background-size: auto;
-
       border-radius: 20px 20px 0px 0px;
     }
 
@@ -175,8 +174,6 @@
 
   <main class="container py-5">
 
-
-
     <div class="px-4">
       <h1 class="my-5">Process Compendium</h1>
       <h5>A recreation using P5.js</h5>
@@ -215,14 +212,11 @@
         </div>
       </div>
 
-
     </div>
 
     <div id="app" class="d-flex flex-wrap">
       <project-item v-for=" (project, index) in projects" :key="index" :content="project" />
-
     </div>
-
 
   </main>
 
