@@ -1,19 +1,19 @@
 // FROM PROCESS COMPENDIUM
 
-let circleNum = 10;
-let radiusMin, radiusMax;
-
-let globalAlpha = 20;
-
-let mainB = [249, 249, 252];
-
-let bug;
-let currentAngle;
+const circleNum = 10;
+const globalAlpha = 20;
+const mainB = [249, 249, 252];
 
 // Ellipses touching (form 1)
 // Lines intersecting (form 2)
-let form = 1;
 
+const form = 1;
+// offscreen renderer
+let bug;
+
+let radiusMin, radiusMax, currentAngle;
+
+// object array
 let circles = [];
 
 function setup() {
@@ -50,7 +50,6 @@ function draw() {
 		circles[i].update();
 	}
 
-	// click to see the debug mode
 	image(bug, 0, 0, bug.width, bug.height);
 }
 
@@ -59,7 +58,6 @@ function CircleInit() {
 	circles = [];
 
 	// fill array with new circle instances
-	// spawn circles in the center of the origins
 	for (let i = 0; i < circleNum; i++) {
 		circles[i] = new Elements(
 			random(radiusMax, width - radiusMax),
@@ -231,7 +229,7 @@ class Elements {
 		return dist(this.x, this.y, other.x, other.y);
 	}
 
-	// this is detects the intersection of lines
+	// detect the intersection of lines
 	intersects(other) {
 		let localLine = this.linePoints;
 		let otherLine = other.linePoints;
@@ -255,17 +253,3 @@ class Elements {
 		}
 	}
 }
-
-// disable so it doesn't block mobile
-// makes p5.js better for mobile
-// function touchStarted() {
-// 	return false;
-// }
-
-// function touchMoved() {
-// 	return false;
-// }
-
-// function touchEnded() {
-// 	return false;
-// }
