@@ -9,25 +9,42 @@
         html,
         body {
             height: 100%;
-        }
 
-        body {
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
         }
+
+        #Banner {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            background: rgba(245, 245, 245, 1);
+            padding: 2rem;
+        }
     </style>
 </head>
 
-<body></body>
+<body>
+    <div id="Banner">Press and hold to see how the elements interact to draw to screen </div>
+
+</body>
 
 <!-- import the javascript library file(s) -->
 <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js" crossorigin="anonymous"></script>
 
 <script src="https://unpkg.com/ccapture.js@1.1.0/build/CCapture.all.min.js"></script>
 
+<script>
+    const banner = document.getElementById('Banner')
 
+    setTimeout(() => {
+        banner.style.display = 'none'
+    }, 2000);
+
+</script>
 <!-- import the javascript sketch file -->
 <script src="./sketch.js"></script>
 
